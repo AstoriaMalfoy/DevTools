@@ -7,7 +7,6 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.TextRange;
-import org.apache.pdfbox.cos.COSObjectKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,11 +23,13 @@ public class AutoFormatListener extends EditorActionHandler {
     public AutoFormatListener(EditorActionHandler e){
         this.oldEditorActionHandler = e;
     }
+
+
     @Override
     protected void doExecute(@NotNull Editor editor, @Nullable Caret caret, DataContext dataContext) {
-        CaretModel caretModel = editor.getCaretModel( );
+        CaretModel caretModel = editor.getCaretModel();
         FileType fileType = editor.getVirtualFile( ).getFileType( );
-        System.out.println(fileType.getName());
+        System.out.println( fileType.getName() );
         if ( fileType.getName().contains( "JAVA" )){
             LogicalPosition logicalPosition = caretModel.getLogicalPosition();
             // 获取当前行的数据
@@ -53,25 +54,28 @@ public class AutoFormatListener extends EditorActionHandler {
             char current = sb.charAt(i);
             char next = sb.charAt(i+1);
             // 插入空格的条件
+
             if (
-                    ( current != next && (
+                    (( current != next && current != '\'' && current != '\"' && next != '\'' && next != '\"' && (
                             (current != ' ' && current != '!' && next == '=' ) || (current == '=' && next != ' ')
-                                    || (current != ' ' && next == '+') || (current == '+' && next != ' ')
-                                    || (current != ' ' && next == '-') || (current == '-' && next != ' ')
-                                    || (current != ' ' && next == '*') || (current == '*' && next != ' ')
-                                    || (current != ' ' && next == '/') || (current == '/' && next != ' ')
-                                    || (current != ' ' && next == '&') || (current == '&' && next != ' ')
-                                    || (current != ' ' && next == '|') || (current == '|' && next != ' ')
-                                    || (current != ' ' && next == '!') || (current == '!' && next != ' ' && next != '=')
-                                    || (current != ' ' && next == '>') || (current == '>' && next != ' ')
+                                    || ( current != ' ' && next == '+') || ( current == '+' && next != ' ')
+                                    || ( current != ' ' && next == '-') || ( current == '-' && next != ' ')
+                                    || ( current != ' ' && next == '*') || ( current == '*' && next != ' ')
+                                    || ( current != ' ' && next == '/') || ( current == '/' && next != ' ')
+                                    || ( current != ' ' && next == '&' ) || ( current == '&' && next != ' ' )
+                                    || ( current != ' ' && next == '|' ) || ( current == '|' && next != ' ' )
+                                    || ( current != ' ' && next == '!') || ( current == '!' && next != ' ' && next != '=')
+                                    || ( current != ' ' && next == '>' ) || ( current == '>' && next != ' ' )
+                                    || ( current != ' ' && next == '<' ) || ( current == '<' && next != ' ' )
+                                    || ( current != ' ' && next == ',' ) || ( current == ',' && next != ' ' )
                         )
                     ) || (
+                            ( current == '(' && next != ' ' && next != ')' && next != '\'' && next != '\"')
+                                    || ( current == '{' && next != ' ' && next != '}' && next != '\'' && next != '\"')
+                                    || ( current != ' ' && next == ')' && current != '(' && current != '\'' && current != '\"')
+                                    || ( current != ' ' && next == '}' && current != '{' && current != '\'' && current != '\"')
+                    ) )
 
-                            (current == '(' && next != ' ' && next != ')')
-                                    || (current == '{' && next != ' ' && next != '}')
-                                    || (current != ' ' && next == ')' && current != '(')
-                                    || (current != ' ' && next == '}' && current != '{')
-                    )
             ){
                 insertOffsetList.add(i+1);
             }

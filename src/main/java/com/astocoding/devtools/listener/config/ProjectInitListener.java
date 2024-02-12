@@ -14,13 +14,12 @@ public class ProjectInitListener implements ProjectManagerListener {
 
     @Override
     public void projectOpened(@NotNull Project project) {
-        ProjectManagerListener.super.projectOpened(project);
-
-        LocalFileSystem.getInstance().addVirtualFileListener( new VirtualFileListenerImpl());
-        EditorActionManager.getInstance().setActionHandler( IdeActions.ACTION_EDITOR_PASTE,new EditorPasteListener());
+        ProjectManagerListener.super.projectOpened( project );
+        LocalFileSystem.getInstance().addVirtualFileListener( new VirtualFileListenerImpl() );
+        EditorActionManager.getInstance().setActionHandler( IdeActions.ACTION_EDITOR_PASTE , new EditorPasteListener() );
         EditorActionManager.getInstance().setActionHandler(IdeActions.ACTION_EDITOR_ENTER,new AutoFormatListener(
                 EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ENTER)
-        ));
+        ) );
     }
 
 }

@@ -10,7 +10,6 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.mac.MacOSApplicationProvider;
 import io.github.sharelison.jsontojava.JsonToJava;
 import io.github.sharelison.jsontojava.converter.JsonClassResult;
 import org.jetbrains.annotations.NotNull;

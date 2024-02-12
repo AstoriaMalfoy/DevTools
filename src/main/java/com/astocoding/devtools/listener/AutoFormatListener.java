@@ -2,17 +2,18 @@ package com.astocoding.devtools.listener;
 
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.TextRange;
-import kotlinx.html.A;
+import org.apache.pdfbox.cos.COSObjectKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
+import java.util.Objects;
 
 /**
  * 自动格式化
@@ -25,18 +26,22 @@ public class AutoFormatListener extends EditorActionHandler {
     }
     @Override
     protected void doExecute(@NotNull Editor editor, @Nullable Caret caret, DataContext dataContext) {
-        CaretModel caretModel = editor.getCaretModel();
-        LogicalPosition logicalPosition = caretModel.getLogicalPosition();
-        // 获取当前行的数据
-        Document document = editor.getDocument();
-        int lineStartOffset = document.getLineStartOffset(logicalPosition.line);
-        int lineEndOffset = document.getLineEndOffset(logicalPosition.line);
-        String currentLine = document.getText(new TextRange(lineStartOffset,lineEndOffset));
-        // 对该行进行格式化
-        System.out.println(currentLine);
-        String formattedLine = formatLine(currentLine);
-        System.out.println(formattedLine);
-        document.replaceString(lineStartOffset,lineEndOffset,formattedLine);
+        CaretModel caretModel = editor.getCaretModel( );
+        FileType fileType = editor.getVirtualFile( ).getFileType( );
+        System.out.println(fileType.getName());
+        if ( fileType.getName().contains( "JAVA" )){
+            LogicalPosition logicalPosition = caretModel.getLogicalPosition();
+            // 获取当前行的数据
+            Document document = editor.getDocument();
+            int lineStartOffset = document.getLineStartOffset(logicalPosition.line);
+            int lineEndOffset = document.getLineEndOffset(logicalPosition.line);
+            WriteCommandAction.runWriteCommandAction(ProjectManager.getInstance().getDefaultProject(),()->{
+                String currentLine = document.getText(new TextRange(lineStartOffset,lineEndOffset));
+                // 对该行进行格式化
+                String formattedLine = formatLine(currentLine);
+                document.replaceString(lineStartOffset,lineEndOffset,formattedLine);
+            });
+        }
         oldEditorActionHandler.execute(editor,caret,dataContext);
     }
 
@@ -49,7 +54,7 @@ public class AutoFormatListener extends EditorActionHandler {
             char next = sb.charAt(i+1);
             // 插入空格的条件
             if (
-                    current != next && (
+                    ( current != next && (
                             (current != ' ' && current != '!' && next == '=' ) || (current == '=' && next != ' ')
                                     || (current != ' ' && next == '+') || (current == '+' && next != ' ')
                                     || (current != ' ' && next == '-') || (current == '-' && next != ' ')
@@ -59,13 +64,13 @@ public class AutoFormatListener extends EditorActionHandler {
                                     || (current != ' ' && next == '|') || (current == '|' && next != ' ')
                                     || (current != ' ' && next == '!') || (current == '!' && next != ' ' && next != '=')
                                     || (current != ' ' && next == '>') || (current == '>' && next != ' ')
-                                    || (current != ' ' && next == '<') || (current == '<' && next != ' ')
+                        )
+                    ) || (
 
-
-                                    || (current == '(' && next != ' ')
-                                    || (current == '{' && next != ' ')
-                                    || (current != ' ' && next == ')')
-                                    || (current != ' ' && next == '}')
+                            (current == '(' && next != ' ' && next != ')')
+                                    || (current == '{' && next != ' ' && next != '}')
+                                    || (current != ' ' && next == ')' && current != '(')
+                                    || (current != ' ' && next == '}' && current != '{')
                     )
             ){
                 insertOffsetList.add(i+1);

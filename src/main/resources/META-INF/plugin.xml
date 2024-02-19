@@ -22,6 +22,13 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs = "com.intellij" >
+        <applicationConfigurable
+                parentId="tools"
+                instance="com.astocoding.devtools.configurable.DevToolsSettingConfiguration"
+                id="com.astocoding.devtools.configurable.DevToolsSettingConfiguration"
+                displayName="DevToolsSetting"/>
+
+        <applicationService serviceImplementation="com.astocoding.devtools.configurable.DevToolsGlobalSetting"/>
     </extensions>
 
     <actions>
@@ -33,7 +40,6 @@
     <projectListeners>
         <listener class="com.astocoding.devtools.listener.config.ProjectInitListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
-        <listener class="com.astocoding.devtools.listener.AutoFormatListenerV2"
-                  topic="com.intellij.openapi.editor.event.CaretListener"/>
     </projectListeners>
+
 </idea-plugin>

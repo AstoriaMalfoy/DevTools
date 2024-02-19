@@ -1,5 +1,6 @@
 package com.astocoding.devtools.listener;
 
+import com.astocoding.devtools.configurable.DevToolsGlobalSetting;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.*;
@@ -23,14 +24,12 @@ public class AutoFormatListener extends EditorActionHandler {
     public AutoFormatListener(EditorActionHandler e){
         this.oldEditorActionHandler = e;
     }
-
-
     @Override
     protected void doExecute(@NotNull Editor editor, @Nullable Caret caret, DataContext dataContext) {
         CaretModel caretModel = editor.getCaretModel();
         FileType fileType = editor.getVirtualFile( ).getFileType( );
         System.out.println( fileType.getName() );
-        if ( fileType.getName().contains( "JAVA" )){
+        if ( fileType.getName().contains( "JAVA" ) && DevToolsGlobalSetting.getInstance().getAutoFormatEnable() ){
             LogicalPosition logicalPosition = caretModel.getLogicalPosition();
             // 获取当前行的数据
             Document document = editor.getDocument();

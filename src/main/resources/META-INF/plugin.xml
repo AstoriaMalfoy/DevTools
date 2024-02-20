@@ -23,10 +23,10 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs = "com.intellij" >
         <applicationConfigurable
-                parentId="tools"
+                parentId="Other Setting"
                 instance="com.astocoding.devtools.configurable.DevToolsSettingConfiguration"
                 id="com.astocoding.devtools.configurable.DevToolsSettingConfiguration"
-                displayName="DevToolsSetting"/>
+                displayName="Dev Tool Setting"/>
 
         <applicationService serviceImplementation="com.astocoding.devtools.configurable.DevToolsGlobalSetting"/>
     </extensions>

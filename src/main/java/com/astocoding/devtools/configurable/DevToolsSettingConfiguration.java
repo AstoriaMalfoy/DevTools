@@ -28,7 +28,7 @@ public class DevToolsSettingConfiguration implements Configurable {
 
     @Override
     public boolean isModified() {
-        return false;
+        return true;
     }
 
     @Override
